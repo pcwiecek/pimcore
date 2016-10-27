@@ -541,6 +541,7 @@ $scripts = array(
     "pimcore/layout/portlets/feed.js",
     "pimcore/layout/portlets/analytics.js",
     "pimcore/layout/portlets/customreports.js",
+    "pimcore/layout/portlets/notifications.js",
 
     "pimcore/layout/toolbar.js",
     "pimcore/layout/treepanelmanager.js",

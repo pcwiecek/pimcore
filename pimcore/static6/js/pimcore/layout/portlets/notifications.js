@@ -13,55 +13,24 @@
  * @author Piotr Ćwięcek <pcwiecek@divante.pl>
  * @author Kamil Karkus <kkarkus@divante.pl>
  */
-pimcore.registerNS("pimcore.notification.panel");
-pimcore.notification.panel = Class.create({
 
-    initialize: function () {
-        this.getTabPanel();
+pimcore.registerNS("pimcore.layout.portlets.notifications");
+pimcore.layout.portlets.notifications = Class.create(pimcore.layout.portlets.abstract, {
+
+    getType: function () {
+        return "pimcore.layout.portlets.notifications";
     },
 
-    activate: function () {
-        var tabPanel = Ext.getCmp("pimcore_panel_tabs");
-        tabPanel.setActiveItem("pimcore_notification_panel");
+
+    getName: function () {
+        return t("notifications");
     },
 
-    getTabPanel: function () {
-        if (!this.panel) {
-            var gridPanel = new Ext.Panel({
-                id: 'gridPanel',
-                region: 'center',
-                items: [
-                    this.getGrid()
-                ]
-            });
-
-            this.panel = new Ext.Panel({
-                id: "pimcore_notification_panel",
-                title: t("notifications"),
-                iconCls: "pimcore_icon_email",
-                border: false,
-                layout: 'border',
-                closable: true,
-                items: [
-                    gridPanel
-                ],
-            });
-
-            var tabPanel = Ext.getCmp("pimcore_panel_tabs");
-            tabPanel.add(this.panel);
-            tabPanel.setActiveItem("pimcore_notification_panel");
-
-
-            this.panel.on("destroy", function () {
-                pimcore.globalmanager.remove("notifications");
-            }.bind(this));
-
-            pimcore.layout.refresh();
-        }
-
-        return this.panel;
+    getIcon: function () {
+        return "pimcore_icon_email";
     },
-    getGrid: function () {
+
+    getLayout: function (portletId) {
         var itemsPerPage = pimcore.helpers.grid.getDefaultPageSize();
         this.store = pimcore.helpers.grid.buildDefaultStore(
             '/admin/notification/list?',
@@ -73,7 +42,7 @@ pimcore.notification.panel = Class.create({
             {header: "ID", flex: 1, sortable: false, hidden: true, dataIndex: 'id'},
             {
                 header: t("title"),
-                flex: 10,
+                flex: 6,
                 sortable: false,
                 dataIndex: 'title',
                 renderer: function (val, metaData, record, rowIndex, colIndex, store) {
@@ -94,9 +63,7 @@ pimcore.notification.panel = Class.create({
                         tooltip: t('open'),
                         icon: "/pimcore/static6/img/flat-color-icons/right.svg",
                         handler: function (grid, rowIndex) {
-                            pimcore.notification.helpers.openDetails(grid.getStore().getAt(rowIndex).get("id"), function() {
-                                this.reload();
-                            }.bind(this));
+                            this.openDetails(grid.getStore().getAt(rowIndex).get("id"));
                         }.bind(this)
                     },
                     {
@@ -125,23 +92,6 @@ pimcore.notification.panel = Class.create({
             }
         ];
 
-        this.pagingtoolbar = pimcore.helpers.grid.buildDefaultPagingToolbar(this.store);
-
-        var toolbar = Ext.create('Ext.Toolbar', {
-            cls: 'main-toolbar',
-            items: [
-                {
-                    text: t("delete_all"),
-                    iconCls: "pimcore_icon_delete",
-                    handler: function() {
-                        pimcore.notification.helpers.deleteAll(function () {
-                            this.reload();
-                        }.bind(this));
-                    }.bind(this)
-                }
-            ]
-        });
-
         this.grid = new Ext.grid.GridPanel({
             frame: false,
             autoScroll: true,
@@ -154,9 +104,9 @@ pimcore.notification.panel = Class.create({
             listeners: {
                 "itemdblclick": function (grid, record, tr, rowIndex, e, eOpts) {
                     pimcore.notification.helpers.openDetails(record.data.id, function() {
-                        this.reload();
-                    }.bind(this));
-                }.bind(this)
+                        grid.getStore().reload();
+                    });
+                }
 
             },
             viewConfig: {
@@ -165,10 +115,15 @@ pimcore.notification.panel = Class.create({
             tbar: toolbar
         });
 
-        return this.grid;
-    },
+        this.layout = Ext.create('Portal.view.Portlet', Object.extend(this.getDefaultConfig(), {
+            title: this.getName(),
+            iconCls: this.getIcon(),
+            height: 275,
+            layout: "fit",
+            items: [this.grid]
+        }));
 
-    reload: function () {
-        this.store.reload();
-    },
+        this.layout.portletId = portletId;
+        return this.layout;
+    }
 });

@@ -62,9 +62,7 @@ pimcore.notification.helpers.unreadPopup = function (interval) {
                             tooltip: t('open'),
                             handler: function () {
                                 notification.close();
-                                pimcore.globalmanager.get("layout_toolbar").showNotificationTab();
-                                var notifications = pimcore.globalmanager.get("notifications");
-                                notifications.openDetails(row.id);
+                                pimcore.notification.helpers.openDetails(row.id);
                             }
                         }
                     ]
@@ -106,4 +104,49 @@ pimcore.notification.helpers.deleteAll = function (callback) {
             }
         }
     });
+};
+
+
+pimcore.notification.helpers.openDetails = function (id, callback) {
+    Ext.Ajax.request({
+        url: "/admin/notification/details?id=" + id,
+        success: function (response) {
+            response = Ext.decode(response.responseText);
+            if (!response.success) {
+                return;
+            }
+            pimcore.notification.helpers.openDetailsWindow(
+                response.data.id,
+                response.data.title,
+                response.data.message,
+                response.data.type,
+                callback
+            );
+        }
+    });
+};
+
+pimcore.notification.helpers.openDetailsWindow = function (id, title, message, type, callback) {
+    var notification = new Ext.Window({
+        modal: true,
+        iconCls: 'pimcore_icon_' + type,
+        title: title,
+        html: message,
+        autoShow: true,
+        width: 'auto',
+        maxWidth: 700,
+        closable: true,
+        bodyStyle: "padding: 10px; background:#fff;",
+        autoClose: false,
+        listeners: {
+            focusleave: function () {
+                this.close();
+            },
+            afterrender: function () {
+                pimcore.notification.helpers.markAsRead(id, callback);
+            }
+        }
+    });
+    notification.show(document);
+    notification.focus();
 };
