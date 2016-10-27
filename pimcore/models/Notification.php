@@ -15,6 +15,7 @@
  */
 
 namespace Pimcore\Model;
+
 use Pimcore\Logger;
 
 /**
@@ -48,12 +49,12 @@ class Notification extends AbstractModel
     /**
      * @var null|int
      */
-    public $fromUser = null;
+    public $fromUser;
 
     /**
      * @var int
      */
-    public $user = null;
+    public $user;
 
     /**
      * @var bool
@@ -73,7 +74,7 @@ class Notification extends AbstractModel
     /**
      * @param int $id
      *
-     * @return Notification
+     * @return Notification|null
      */
     public static function getById($id)
     {
@@ -116,7 +117,7 @@ class Notification extends AbstractModel
     }
 
     /**
-     * @return Notification
+     * @return $this
      */
     public static function create()
     {
@@ -186,7 +187,7 @@ class Notification extends AbstractModel
     /**
      * @param int $id
      *
-     * @return Notification
+     * @return $this
      */
     public function setId($id)
     {
@@ -206,7 +207,7 @@ class Notification extends AbstractModel
     /**
      * @param string $type
      *
-     * @return Notification
+     * @return $this
      */
     public function setType($type)
     {
@@ -225,7 +226,7 @@ class Notification extends AbstractModel
     /**
      * @param string $title
      *
-     * @return Notification
+     * @return $this
      */
     public function setTitle($title)
     {
@@ -244,7 +245,7 @@ class Notification extends AbstractModel
     /**
      * @param string $message
      *
-     * @return Notification
+     * @return $this
      */
     public function setMessage($message)
     {
@@ -263,7 +264,7 @@ class Notification extends AbstractModel
     /**
      * @param int|null $fromUser
      *
-     * @return Notification
+     * @return $this
      */
     public function setFromUser($fromUser)
     {
@@ -282,7 +283,7 @@ class Notification extends AbstractModel
     /**
      * @param int $user
      *
-     * @return Notification
+     * @return $this
      */
     public function setUser($user)
     {
@@ -309,7 +310,7 @@ class Notification extends AbstractModel
     /**
      * @param boolean $unread
      *
-     * @return Notification
+     * @return $this
      */
     public function setUnread($unread)
     {

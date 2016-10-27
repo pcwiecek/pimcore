@@ -32,6 +32,8 @@ class Dao extends Model\Dao\AbstractDao
      * @param $id
      *
      * @throws \Exception
+     *
+     * @return void
      */
     public function getById($id)
     {
@@ -46,6 +48,8 @@ class Dao extends Model\Dao\AbstractDao
 
     /**
      * @throws \Exception
+     *
+     * @return void
      */
     public function create()
     {
@@ -66,9 +70,10 @@ class Dao extends Model\Dao\AbstractDao
         }
     }
 
-
     /**
      * @throws \Exception
+     *
+     * @return void
      */
     public function update()
     {
@@ -90,6 +95,8 @@ class Dao extends Model\Dao\AbstractDao
 
     /**
      * @throws \Exception
+     *
+     * @return void
      */
     public function save()
     {
@@ -104,6 +111,8 @@ class Dao extends Model\Dao\AbstractDao
      * Delete the row from the database. (based on the model id)
      *
      * @throws \Exception
+     *
+     * @return void
      */
     public function delete()
     {

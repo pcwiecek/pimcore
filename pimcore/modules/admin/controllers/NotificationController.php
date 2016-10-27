@@ -24,7 +24,11 @@ class Admin_NotificationController extends \Pimcore\Controller\Action\Admin\Docu
 {
 
     /**
+     * Retrieves notifications json list for currently logged user.
+     *
      * @throws Exception
+     *
+     * @return void
      */
     public function listAction()
     {
@@ -66,7 +70,9 @@ class Admin_NotificationController extends \Pimcore\Controller\Action\Admin\Docu
     }
 
     /**
-     * @throws Exception
+     * Retrieves unread notifications json list for currently logged user.
+     *
+     * @return void
      */
     public function unreadAction()
     {
@@ -108,7 +114,11 @@ class Admin_NotificationController extends \Pimcore\Controller\Action\Admin\Docu
     }
 
     /**
+     * Retrieves json detailed notification data for a given id.
+     *
      * @throws Exception
+     *
+     * @return void
      */
     public function detailsAction()
     {
@@ -145,7 +155,11 @@ class Admin_NotificationController extends \Pimcore\Controller\Action\Admin\Docu
     }
 
     /**
+     * Delete notification for a given id.
+     *
      * @throws Exception
+     *
+     * @return void
      */
     public function deleteAction()
     {
@@ -162,6 +176,11 @@ class Admin_NotificationController extends \Pimcore\Controller\Action\Admin\Docu
         ]);
     }
 
+    /**
+     * Deletes all notifications for currently logged user.
+     *
+     * @return void
+     */
     public function deleteAllAction()
     {
         $notifications = new Notification\Listing();
@@ -177,6 +196,11 @@ class Admin_NotificationController extends \Pimcore\Controller\Action\Admin\Docu
         ]);
     }
 
+    /**
+     * Retrieves unread notifications count for currently logged user.
+     *
+     * @return void
+     */
     public function unreadCountAction()
     {
         $notifications = new Notification\Listing();
@@ -189,7 +213,11 @@ class Admin_NotificationController extends \Pimcore\Controller\Action\Admin\Docu
     }
 
     /**
+     * Marks a notification as read.
+     *
      * @throws Exception
+     *
+     * @return void
      */
     public function markAsReadAction()
     {
@@ -206,6 +234,13 @@ class Admin_NotificationController extends \Pimcore\Controller\Action\Admin\Docu
         ]);
     }
 
+    /**
+     * Marks a notification as read and saves an object.
+     *
+     * @param Notification $object
+     *
+     * @return void
+     */
     private function changeStatus(Notification $object)
     {
         $object->setUnread(false);

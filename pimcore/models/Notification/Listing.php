@@ -20,23 +20,20 @@ use Pimcore\Model;
 use Pimcore\Model\Notification;
 
 /**
- * @method int getTotalCount()
- * @method int getCount()
- * @method int loadIdList()
- */
-
-/**
  * @author Piotr Ćwięcek <pcwiecek@divante.pl>
  * @author Kamil Karkus <kkarkus@divante.pl>
  *
- * @method \Pimcore\Model\Notification\Listing\Dao getDao()
+ * @method Listing\Dao getDao()
+ * @method int getTotalCount()
+ * @method int getCount()
+ * @method int loadIdList()
  */
 class Listing extends Model\Listing\AbstractListing implements \Zend_Paginator_Adapter_Interface, \Zend_Paginator_AdapterAggregate, \Iterator
 {
     /**
      * Contains the results of the list
      *
-     * @var array
+     * @var Notification[]|null
      */
     public $notifications = null;
 
@@ -51,7 +48,7 @@ class Listing extends Model\Listing\AbstractListing implements \Zend_Paginator_A
     }
 
     /**
-     * @return array
+     * @return Notification[]
      */
     public function getNotifications()
     {
@@ -65,7 +62,7 @@ class Listing extends Model\Listing\AbstractListing implements \Zend_Paginator_A
     /**
      * @param array $notifications
      *
-     * @return Listing
+     * @return $this
      */
     public function setNotifications($notifications)
     {
@@ -101,7 +98,7 @@ class Listing extends Model\Listing\AbstractListing implements \Zend_Paginator_A
     }
 
     /**
-     * @return Listing
+     * @return $this
      */
     public function getPaginatorAdapter()
     {
@@ -110,6 +107,8 @@ class Listing extends Model\Listing\AbstractListing implements \Zend_Paginator_A
 
     /**
      * Rewind the listing back to te start.
+     *
+     * @return void
      */
     public function rewind()
     {
@@ -133,7 +132,7 @@ class Listing extends Model\Listing\AbstractListing implements \Zend_Paginator_A
     /**
      * Returns the current listing row key.
      *
-     * @return mixed
+     * @return Notification|null
      */
     public function key()
     {
@@ -146,7 +145,7 @@ class Listing extends Model\Listing\AbstractListing implements \Zend_Paginator_A
     /**
      * Returns the next listing row key.
      *
-     * @return mixed
+     * @return Notification|false
      */
     public function next()
     {

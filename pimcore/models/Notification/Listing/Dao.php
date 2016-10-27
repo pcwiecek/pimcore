@@ -16,8 +16,8 @@
 
 namespace Pimcore\Model\Notification\Listing;
 
+use Pimcore\Logger;
 use Pimcore\Model;
-use Pimcore\Model\Document;
 use Pimcore\Model\Notification;
 
 /**
@@ -28,14 +28,15 @@ use Pimcore\Model\Notification;
  */
 class Dao extends Model\Listing\Dao\AbstractDao
 {
-
-    /** @var  Callback function */
+    /**
+     * @var callable function
+     */
     protected $onCreateQueryCallback;
 
     /**
-     * Loads a list of objects (all are an instance of Document) for the given parameters an return them
+     * Loads a list of objects (all are an instance of Notification) for the given parameters an return them
      *
-     * @return array
+     * @return Notification[]
      */
     public function load()
     {
@@ -55,6 +56,11 @@ class Dao extends Model\Listing\Dao\AbstractDao
         return $notifications;
     }
 
+    /**
+     * @param array $columns
+     *
+     * @return \Zend_Db_Select
+     */
     public function getQuery($columns)
     {
         $select = $this->db->select();
@@ -75,26 +81,21 @@ class Dao extends Model\Listing\Dao\AbstractDao
     }
 
     /**
-     * Loads a list of document ids for the specicifies parameters, returns an array of ids
+     * Loads a list of notification ids for the specicifies parameters, returns an array of ids
      *
-     * @return array
+     * @return int[]
      */
     public function loadIdList()
     {
         $select = (string) $this->getQuery(['id']);
-        $documentIds = $this->db->fetchCol($select, $this->model->getConditionVariables());
+        $notificationIds = $this->db->fetchCol($select, $this->model->getConditionVariables());
 
-        return $documentIds;
+        return $notificationIds;
     }
 
-    public function loadIdPathList()
-    {
-        $select = (string) $this->getQuery(['id', "CONCAT(path,`key`)"]);
-        $documentIds = $this->db->fetchAll($select, $this->model->getConditionVariables());
-
-        return $documentIds;
-    }
-
+    /**
+     * @return int
+     */
     public function getCount()
     {
         $select = $this->getQuery([new \Zend_Db_Expr('COUNT(*)')]);
@@ -111,11 +112,17 @@ class Dao extends Model\Listing\Dao\AbstractDao
         try {
             $amount = (int) $this->db->fetchOne("SELECT COUNT(*) as amount FROM notifications " . $this->getCondition(), $this->model->getConditionVariables());
         } catch (\Exception $e) {
+            Logger::warning($e->getMessage());
         }
 
         return $amount;
     }
 
+    /**
+     * @param callable $callback
+     *
+     * @return void
+     */
     public function onCreateQuery(callable $callback)
     {
         $this->onCreateQueryCallback = $callback;
